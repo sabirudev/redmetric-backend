@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubmissionPeriodsTable extends Migration
+class CreatePeriodsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class CreateSubmissionPeriodsTable extends Migration
      */
     public function up()
     {
-        Schema::create('submission_periods', function (Blueprint $table) {
+        Schema::create('periods', function (Blueprint $table) {
             $table->id();
+            $table->date('opened')->comment('Tanggal dibuka submission');
+            $table->date('closed')->comment('Tanggal ditutup Submission');
+            $table->boolean('is_ended')->default(0);
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ class CreateSubmissionPeriodsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('submission_periods');
+        Schema::dropIfExists('periods');
     }
 }

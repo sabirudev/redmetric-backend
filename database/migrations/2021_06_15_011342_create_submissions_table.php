@@ -15,6 +15,12 @@ class CreateSubmissionsTable extends Migration
     {
         Schema::create('submissions', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('period_id');
+            $table->decimal('total_values', 8, 2);
+            $table->decimal('total_points', 8, 2);
+            $table->integer('rangking')->nullable()->comment('Hasil Peringkat Desa');
+            $table->boolean('publish');
             $table->timestamps();
         });
     }
