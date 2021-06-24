@@ -17,7 +17,7 @@ class CreateIndicatorInputsTable extends Migration
             $table->id();
             $table->unsignedInteger('indicator_id');
             $table->string('label');
-            $table->string('type', 15)->nullable();
+            $table->string('unit', 50)->nullable();
             $table->timestamps();
         });
     }

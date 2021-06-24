@@ -18,7 +18,7 @@ class CreateIndicatorsTable extends Migration
             $table->unsignedInteger('indicator_criteria_id');
             $table->string('code');
             $table->text('description');
-            $table->string('unit')->nullable();
+            $table->string('evidence')->nullable();
             $table->timestamps();
         });
     }

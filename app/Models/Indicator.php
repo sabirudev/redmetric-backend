@@ -14,7 +14,8 @@ class Indicator extends Model
         'indicator_criteria_id',
         'code',
         'description',
-        'unit'
+        'formula',
+        'help'
     ];
 
     public function criteria()

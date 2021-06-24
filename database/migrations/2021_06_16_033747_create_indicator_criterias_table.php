@@ -15,7 +15,6 @@ class CreateIndicatorCriteriasTable extends Migration
     {
         Schema::create('indicator_criterias', function (Blueprint $table) {
             $table->id();
-            $table->string('number');
             $table->string('name');
             $table->softDeletes();
             $table->timestamps();

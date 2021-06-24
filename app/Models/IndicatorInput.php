@@ -9,7 +9,8 @@ use App\Models\Indicator;
 class IndicatorInput extends Model
 {
     use HasFactory;
-    protected $fillable = ['indicator_id', 'label', 'type'];
+    protected $fillable = ['indicator_id', 'label', 'unit'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function indicator()
     {
