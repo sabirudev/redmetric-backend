@@ -8,10 +8,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Role;
 use App\Models\Village;
+use Laravel\Passport\HasApiTokens;
+use Modules\Membership\Member;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -52,5 +54,10 @@ class User extends Authenticatable
     public function profile()
     {
         $this->hasOne(Village::class);
+    }
+
+    public function membership()
+    {
+        return $this->hasOne(Member::class);
     }
 }
