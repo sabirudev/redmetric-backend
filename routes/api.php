@@ -19,4 +19,5 @@ Route::middleware('auth:api')
     ->prefix('user')
     ->group(function () {
         Route::apiResource('submissions', 'SubmissionApiController', ['names' => 'api.user.submission']);
+        Route::apiResource('villages', 'VillageApiController', ['names' => 'api.user.villages']);
     });

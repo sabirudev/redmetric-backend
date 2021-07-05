@@ -3,13 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Submission;
-use App\Models\Indicator;
 use App\Models\Attachment;
 use App\Models\InputSubmission;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class IndicatorSubmission extends Model
+class IndicatorSubmission extends Pivot
 {
     use HasFactory;
     protected $fillable = [
@@ -17,16 +15,6 @@ class IndicatorSubmission extends Model
         'indicator_id',
         'result'
     ];
-
-    public function submission()
-    {
-        return $this->belongsTo(Submission::class);
-    }
-
-    public function indicator()
-    {
-        return $this->belongsTo(Indicator::class);
-    }
 
     public function evidence()
     {

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Period;
+use App\Models\IndicatorSubmission;
 
 class Submission extends Model
 {
@@ -26,8 +27,10 @@ class Submission extends Model
         return $this->belongsTo(Period::class);
     }
 
-    public function items()
+    public function indicators()
     {
-        return $this->hasMany(IndicatorSubmission::class, 'submission_id', 'id');
+        return $this->belongsToMany(Indicator::class)
+            ->using(IndicatorSubmission::class)
+            ->withPivot('result', 'id');
     }
 }

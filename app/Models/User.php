@@ -51,9 +51,9 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function profile()
+    public function village()
     {
-        $this->hasOne(Village::class);
+        return $this->hasOne(Village::class, 'user_id', 'id');
     }
 
     public function membership()

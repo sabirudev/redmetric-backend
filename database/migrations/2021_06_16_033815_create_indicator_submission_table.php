@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateIndicatorSubmissionsTable extends Migration
+class CreateIndicatorSubmissionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateIndicatorSubmissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('indicator_submissions', function (Blueprint $table) {
+        Schema::create('indicator_submission', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('submission_id');
             $table->unsignedInteger('indicator_id');
             $table->string('result')->nullable();
-            $table->timestamps();
         });
     }
 

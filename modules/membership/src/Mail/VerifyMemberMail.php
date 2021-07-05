@@ -31,12 +31,12 @@ class VerifyMemberMail extends Mailable
     public function build()
     {
         $member    = $this->member;
-        $from      = config('stadium-membership.email.from');
+        $from      = config('membership.email.from');
         $encryped  = Crypt::encryptString($member->uuid);
         $verifyUrl = route('api.membership.verify', ['verify' => $encryped, 'member' => $member->uuid]);
         return $this->from($from)
             ->subject('Verify Membership Gamesstadium')
-            ->view('stadium-membership::emails.verify-member')
+            ->view('membership::emails.verify-member')
             ->with([
                 'member' => $member,
                 'action' => [

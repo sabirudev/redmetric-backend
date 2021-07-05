@@ -30,11 +30,11 @@ class ResetPasswordMail extends Mailable
     public function build()
     {
         $user     = $this->user;
-        $from     = config('stadium-membership.email.from');
-        $loginUrl = config('stadium-membership.frontend_url') . '/login';
+        $from     = config('membership.email.from');
+        $loginUrl = config('membership.frontend_url') . '/login';
         return $this->from($from)
             ->subject('Reset Password Gamesstadium')
-            ->view('stadium-membership::emails.reset-password')
+            ->view('membership::emails.reset-password')
             ->with([
                 'user' => $user,
                 'action' => [

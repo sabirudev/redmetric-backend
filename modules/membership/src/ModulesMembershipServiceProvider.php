@@ -36,13 +36,13 @@ class ModulesMembershipServiceProvider extends ServiceProvider
 
     public function loadConfig()
     {
-        $path = __DIR__ . '/../config/stadium-membership.php';
-        $this->mergeConfigFrom($path, 'stadium-membership');
+        $path = __DIR__ . '/../config/membership.php';
+        $this->mergeConfigFrom($path, 'membership');
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                $path => config_path('stadium-membership.php'),
-            ], 'stadium-membership:config');
+                $path => config_path('membership.php'),
+            ], 'membership:config');
         }
     }
 
@@ -66,6 +66,6 @@ class ModulesMembershipServiceProvider extends ServiceProvider
     private function loadViews()
     {
         $path = __DIR__ . '/../resources/views';
-        $this->loadViewsFrom($path, 'stadium-membership');
+        $this->loadViewsFrom($path, 'membership');
     }
 }

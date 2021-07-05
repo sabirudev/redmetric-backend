@@ -142,10 +142,10 @@ class MembershipApiController extends Controller
                     $user->markEmailAsVerified();
                 }
             }
-            $frontendUrl = config('stadium-membership.frontend_url') . '?verified=1';
+            $frontendUrl = config('membership.frontend_url') . '?verified=1';
             return redirect()->away($frontendUrl);
         } else {
-            $frontendUrl = config('stadium-membership.frontend_url') . '?verified=0';
+            $frontendUrl = config('membership.frontend_url') . '?verified=0';
             return redirect()->away($frontendUrl);
         }
     }
@@ -196,6 +196,16 @@ class MembershipApiController extends Controller
     {
         return response()->json([
             'data' => $member
+        ]);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->tokens->each(function ($token) {
+            $token->delete();
+        });
+        return response()->success([
+            'message' => 'Successfully logged out'
         ]);
     }
 }

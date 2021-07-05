@@ -25,6 +25,6 @@ class Village extends Model
 
     public function account()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

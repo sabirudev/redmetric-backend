@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\IndicatorCriteria;
 use App\Models\IndicatorInput;
+use App\Models\IndicatorSubmission;
 
 class Indicator extends Model
 {
@@ -26,5 +27,12 @@ class Indicator extends Model
     public function inputs()
     {
         return $this->hasMany(IndicatorInput::class);
+    }
+
+    public function submissions()
+    {
+        return $this->belongsToMany(Submission::class)
+            ->using(IndicatorSubmission::class)
+            ->withPivot('result', 'id');
     }
 }
