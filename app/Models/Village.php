@@ -20,7 +20,10 @@ class Village extends Model
         'secretary',
         'amount_male',
         'amount_female',
-        'amount_productive_age'
+        'amount_productive_age',
+        'address_longitude',
+        'address_latitude',
+        'area'
     ];
 
     public function account()
