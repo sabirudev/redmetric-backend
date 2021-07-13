@@ -25,7 +25,7 @@ class UpdateMember extends FormRequest
     {
         return [
             'gender' => 'sometimes|in:male,female',
-            'identity.*.type' => 'sometimes|required|in:ktp,sim,npwp',
+            'identity.*.type' => 'sometimes|required|in:ktp,sim,npwp,surat_tugas',
             'password' => 'sometimes|min:6|string|confirmed'
         ];
     }

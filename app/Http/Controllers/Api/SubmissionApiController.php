@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SubmissionStore;
 use App\Models\IndicatorCriteria;
+use App\Models\Period;
 use App\Models\Submission;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SubmissionApiController extends Controller
@@ -17,12 +19,43 @@ class SubmissionApiController extends Controller
      */
     public function index(Request $request, IndicatorCriteria $criteria)
     {
-        $idCriteria = $request->page ?? 1;
-        $criteria = $criteria->with([
-            'indicators.inputs'
-        ]);
-        $criteria = $criteria->where('id', $idCriteria)->get();
-        return response()->success($criteria);
+        $activePeriod = Period::whereDate('opened', '<=', Carbon::now()->format('Y-m-d'))
+            ->whereDate('closed', '>=', Carbon::now()->format('Y-m-d'))
+            ->where('is_ended', false)
+            ->first();
+        if ($activePeriod) {
+            $values = collect([]);
+            $submission = Submission::with('indicators')
+                ->where('user_id', $request->user()->id)
+                ->where('period_id', $activePeriod->id)
+                ->first();
+            if ($submission) {
+                $values = $submission->indicators->map(function ($indicator) {
+                    return $indicator->pivot->values ?? [];
+                })->flatten();
+            }
+            $idCriteria = $request->page ?? 1;
+            $criteria = $criteria->with([
+                'indicators.inputs'
+            ]);
+            $criteria   = $criteria->where('id', $idCriteria)->first();
+            $questions  = $criteria->indicators->map(function ($indicator) {
+                return $indicator->inputs->load('indicator');
+            })->flatten();
+            $questions  = $questions->map(function ($question) use ($values) {
+                $value      = $values->filter(function ($value) use ($question) {
+                    return $value->indicator_input_id === $question->id;
+                })->first()->value ?? null;
+                $question   = collect($question);
+                $question   = $question->merge(['value' => $value]);
+                return $question;
+            });
+            return response()->success($questions);
+        } else {
+            return response()->fail([
+                'errors' => 'Sorry, period is over'
+            ]);
+        }
     }
 
     /**
@@ -76,7 +109,7 @@ class SubmissionApiController extends Controller
      */
     public function show(Submission $submission)
     {
-        //
+        return response()->success($submission);
     }
 
     /**
