@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Membership\Http\Requests;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUser extends FormRequest
+class UserStore extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,8 @@ class StoreUser extends FormRequest
         return [
             'name' => 'sometimes|required',
             'email' => 'required|unique:users',
-            'password' => 'required|min:6|string|confirmed'
+            'password' => 'required|min:6|string|confirmed',
+            'role_id' => 'required|exists:roles,id'
         ];
     }
 }
