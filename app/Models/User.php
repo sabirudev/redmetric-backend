@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Role;
 use App\Models\Village;
+use App\Models\Submission;
 use Laravel\Passport\HasApiTokens;
 use Modules\Membership\Member;
 
@@ -59,5 +60,10 @@ class User extends Authenticatable
     public function membership()
     {
         return $this->hasOne(Member::class);
+    }
+
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class, 'user_id', 'id');
     }
 }

@@ -132,7 +132,30 @@ class SubmissionApiController extends Controller
      */
     public function update(Request $request, Submission $submission)
     {
-        //
+        $configFramework = config('redmetric-framework');
+        $user = $submission->user;
+        $results = $submission->indicators->map(function ($indicator) use ($configFramework, $user) {
+            $userDetails = collect($user->load('village'));
+            $values = collect($indicator->pivot->values ?? [])->pluck('value');
+            $formula = collect($configFramework[$indicator->code] ?? [])->map(function ($config, $key) use ($values, $userDetails) {
+                return collect(['*', '+', '/'])->contains($config)
+                    ? $config
+                    : $values[$config] ?? data_get($userDetails, $config, null) ?? $config;
+            });
+            $result = $formula->join('');
+            $result = number_format(eval("return $result;"), 2);
+            $indicator->pivot->update([
+                'result' => $result
+            ]);
+            return [
+                'code' => $indicator->code,
+                'formula' => $formula,
+                'values' => $values,
+                'result' => $result,
+                'indicator_result' => data_get(collect($indicator->pivot), 'result', null)
+            ];
+        });
+        return response()->success($results);
     }
 
     /**
