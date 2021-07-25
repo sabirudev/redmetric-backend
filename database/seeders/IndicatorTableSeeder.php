@@ -135,6 +135,7 @@ class IndicatorTableSeeder extends Seeder
                     ['Jumlah Wi-Fi hotspot gratis untuk akses internet di ruang public', 'Titik']
                 ]],
                 ['IS.03', 'Access to public transportation', null, [
+                    ['Total rumah warga desa', 'Rumah'],
                     ['Jumlah rumah warga yang dapat mengakses fasilitas transportasi umum dalam radius ≤ 500 meter (APT)', 'Rumah']
                 ]]
             ],

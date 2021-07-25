@@ -138,7 +138,7 @@ class SubmissionApiController extends Controller
             $userDetails = collect($user->load('village'));
             $values = collect($indicator->pivot->values ?? [])->pluck('value');
             $formula = collect($configFramework[$indicator->code] ?? [])->map(function ($config, $key) use ($values, $userDetails) {
-                return collect(['*', '+', '/'])->contains($config)
+                return collect(['*', '+', '/', '(', ')'])->contains($config)
                     ? $config
                     : $values[$config] ?? data_get($userDetails, $config, null) ?? $config;
             });
@@ -155,6 +155,8 @@ class SubmissionApiController extends Controller
                 'indicator_result' => data_get(collect($indicator->pivot), 'result', null)
             ];
         });
+        $submission->publish = 1;
+        $submission->save();
         return response()->success($results);
     }
 
