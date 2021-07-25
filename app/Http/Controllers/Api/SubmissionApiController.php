@@ -155,6 +155,8 @@ class SubmissionApiController extends Controller
                 'indicator_result' => data_get(collect($indicator->pivot), 'result', null)
             ];
         });
+        $submission->publish = 1;
+        $submission->save();
         return response()->success($results);
     }
 
