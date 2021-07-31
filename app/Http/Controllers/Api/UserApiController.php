@@ -83,6 +83,13 @@ class UserApiController extends Controller
         $data['role_id'] = $request->role_id;
         $user = $user->create($data);
         if ($user) {
+            if (intval($request->role_id) === 3) {
+                $user->jury()->create([
+                    'phone' => '+62',
+                    'title' => '-',
+                    'position' => '-'
+                ]);
+            }
             $user->membership()->create([
                 'uuid' => time()
             ]);

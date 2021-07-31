@@ -4,22 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Submission;
+use App\Models\IndicatorSubmission;
 use App\Models\Jury;
 
-class JurySubmission extends Model
+class JuryIndicatorSubmission extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'submission_id',
+        'indicator_submission_id',
         'jury_id',
-        'total_points',
+        'point',
         'note'
     ];
 
-    public function submission()
+    public function indicatorSubmit()
     {
-        return $this->belongsTo(Submission::class, 'submission_id', 'id');
+        return $this->belongsTo(IndicatorSubmission::class, 'indicator_submission_id', 'id');
     }
 
     public function jury()
