@@ -34,6 +34,6 @@ class Jury extends Model
 
     public function submissions()
     {
-        return $this->hasMany(JurySubmission::class);
+        return $this->hasMany(JurySubmission::class, 'jury_id', 'id');
     }
 }
