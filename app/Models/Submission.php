@@ -33,4 +33,9 @@ class Submission extends Model
             ->using(IndicatorSubmission::class)
             ->withPivot('result', 'id');
     }
+
+    public function jurySubmissions()
+    {
+        return $this->hasMany(JurySubmission::class, 'submission_id', 'id');
+    }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateJurySubmissionsTable extends Migration
+class CreateJuryIndicatorSubmissionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateJurySubmissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('jury_submissions', function (Blueprint $table) {
+        Schema::create('jury_indicator_submissions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('submission_id');
+            $table->unsignedInteger('indicator_submission_id');
             $table->unsignedInteger('jury_id');
-            $table->integer('total_points')->nullable();
+            $table->integer('point');
             $table->string('note')->nullable();
             $table->timestamps();
         });
@@ -30,6 +30,6 @@ class CreateJurySubmissionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jury_submissions');
+        Schema::dropIfExists('jury_indicator_submissions');
     }
 }

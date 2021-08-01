@@ -66,4 +66,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Submission::class, 'user_id', 'id');
     }
+
+    public function jury()
+    {
+        return $this->hasOne(Jury::class);
+    }
 }

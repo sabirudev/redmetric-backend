@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\JuryMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,4 +31,12 @@ Route::middleware('auth:api')
     ->group(function () {
         Route::apiResource('users', 'UserApiController', ['names' => 'api.admin.users']);
         Route::apiResource('periods', 'PeriodApiController', ['names' => 'api.admin.periods']);
+    });
+
+Route::middleware(['auth:api', JuryMiddleware::class])
+    ->namespace('App\Http\Controllers\Api')
+    ->prefix('jury')
+    ->group(function () {
+        Route::apiResource('todos', 'JuryTodoApiController', ['names' => 'api.jury.todos']);
+        Route::get('todos/index/mylist', 'JuryTodoApiController@mylist')->name('api.jury.todos.mylist');
     });
