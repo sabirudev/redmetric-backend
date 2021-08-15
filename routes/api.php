@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\JuryMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,9 +24,10 @@ Route::middleware('auth:api')
         Route::apiResource('villages', 'VillageApiController', ['names' => 'api.user.villages']);
         Route::group(['prefix' => 'submissions'], function () {
             Route::get('my/index', 'UserSubmisionApiController@index')->name('api.user.submissions.my.index');
+            Route::post('upload/evidence/{submit}', 'SubmissionApiController@evidence', ['names' => 'api.user.submission.upload.evidence']);
         });
     });
-Route::middleware('auth:api')
+Route::middleware(['auth:api', AdminMiddleware::class])
     ->namespace('App\Http\Controllers\Api')
     ->prefix('admin')
     ->group(function () {

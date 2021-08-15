@@ -9,7 +9,7 @@ class Attachment extends Model
 {
     use HasFactory;
     protected $fillable = ['name', 'file'];
-
+    protected $hidden = ['attachable_type'];
     /**
      * Get the parent attachable model.
      */

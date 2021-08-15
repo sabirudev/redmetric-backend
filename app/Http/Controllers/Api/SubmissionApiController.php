@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EvidenceStore;
 use App\Http\Requests\SubmissionStore;
 use App\Models\IndicatorCriteria;
+use App\Models\IndicatorSubmission;
 use App\Models\Period;
 use App\Models\Submission;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SubmissionApiController extends Controller
 {
@@ -19,20 +22,25 @@ class SubmissionApiController extends Controller
      */
     public function index(Request $request, IndicatorCriteria $criteria)
     {
-        $activePeriod = Period::whereDate('opened', '<=', Carbon::now()->format('Y-m-d'))
-            ->whereDate('closed', '>=', Carbon::now()->format('Y-m-d'))
-            ->where('is_ended', false)
+        $activePeriod = Period::where(function ($query) {
+            $query->whereDate('opened', '<=', Carbon::now()->format('Y-m-d'))
+                ->whereDate('closed', '>=', Carbon::now()->format('Y-m-d'))
+                ->where('is_ended', false);
+        })
             ->first();
         if ($activePeriod) {
-            $values = collect([]);
+            $pivot = collect([]);
             $submission = Submission::with('indicators')
                 ->where('user_id', $request->user()->id)
                 ->where('period_id', $activePeriod->id)
                 ->first();
             if ($submission) {
-                $values = $submission->indicators->map(function ($indicator) {
-                    return $indicator->pivot->values ?? [];
-                })->flatten();
+                $pivot = $submission->indicators->map(function ($indicator) {
+                    return $indicator->pivot->load([
+                        'values',
+                        'evidence'
+                    ]);
+                });
             }
             $idCriteria = $request->page ?? 1;
             $criteria = $criteria->with([
@@ -42,12 +50,15 @@ class SubmissionApiController extends Controller
             $questions  = $criteria->indicators->map(function ($indicator) {
                 return $indicator->inputs->load('indicator');
             })->flatten();
-            $questions  = $questions->map(function ($question) use ($values) {
-                $value      = $values->filter(function ($value) use ($question) {
-                    return $value->indicator_input_id === $question->id;
-                })->first()->value ?? null;
+            $questions  = $questions->map(function ($question) use ($pivot) {
+                $input      = $pivot->pluck('values')->flatten()->where('indicator_input_id', $question->id)->first();
                 $question   = collect($question);
-                $question   = $question->merge(['value' => $value]);
+                $loadPivot  = collect($pivot->where('indicator_id', $question->get('indicator_id'))->first());
+                $loadPivot->forget('values');
+                $question   = $question->merge([
+                    'value' => $input->value ?? null,
+                    'pivot' => $loadPivot
+                ]);
                 return $question;
             });
             return response()->success($questions);
@@ -169,5 +180,23 @@ class SubmissionApiController extends Controller
     public function destroy(Submission $submission)
     {
         //
+    }
+
+    public function evidence(EvidenceStore $request, IndicatorSubmission $submit)
+    {
+        if ($request->hasFile('file')) {
+            if ($submit->evidence()->count() > 0) {
+                Storage::disk('public')->delete($submit->evidence->file);
+                $submit->evidence()->delete();
+            }
+
+            if ($submit->evidence()->count() === 0) {
+                $submit->evidence()->create([
+                    'name' => $submit->indicator->code ?? 'submit-' . $submit->id,
+                    'file' => $request->file->store('evidences', 'public')
+                ]);
+            }
+        }
+        return response()->success($submit->load('evidence'));
     }
 }

@@ -30,4 +30,9 @@ class IndicatorSubmission extends Pivot
     {
         return $this->hasMany(JuryIndicatorSubmission::class, 'indicator_submission_id', 'id');
     }
+
+    public function indicator()
+    {
+        return $this->belongsTo(Indicator::class, 'indicator_id', 'id');
+    }
 }

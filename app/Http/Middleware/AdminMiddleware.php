@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class JuryMiddleware
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,7 @@ class JuryMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->user()->role_id !== 3 || $request->user()->jury === null) {
+        if ($request->user()->role_id !== 1) {
             return response()->fail('Unauthorized', 403);
         }
         return $next($request);
