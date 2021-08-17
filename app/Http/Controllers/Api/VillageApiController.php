@@ -45,11 +45,19 @@ class VillageApiController extends Controller
         $data['user_id'] = $request->user()->id;
         $village = $village->create($data);
         if ($village) {
-            return response()->success($village->load('account.membership'));
+            if ($village->account()->count() > 0) {
+                $user = $village->account;
+                return response()->success($user->load([
+                    'village',
+                    'membership'
+                ]));
+            } else {
+                return response()->fail($village, 404);
+            }
         } else {
             return response()->fail([
                 'message' => 'Error! failed to store village'
-            ]);
+            ], 500);
         }
     }
 
@@ -61,7 +69,15 @@ class VillageApiController extends Controller
      */
     public function show(Village $village)
     {
-        return response()->success($village->load('account'));
+        if ($village->account()->count() > 0) {
+            $user = $village->account;
+            return response()->success($user->load([
+                'village',
+                'membership'
+            ]));
+        } else {
+            return response()->fail($village, 404);
+        }
     }
 
     /**
@@ -84,8 +100,19 @@ class VillageApiController extends Controller
      */
     public function update(VillageUpdate $request, Village $village)
     {
-        $village->update($request->all());
-        return response()->success($village->load('account.membership'));
+        $village->update($request->except([
+            'id',
+            'user_id'
+        ]));
+        if ($village->account()->count() > 0) {
+            $user = $village->account;
+            return response()->success($user->load([
+                'village',
+                'membership'
+            ]));
+        } else {
+            return response()->fail($village, 404);
+        }
     }
 
     /**
