@@ -19,7 +19,7 @@ class VillageApiController extends Controller
     {
         return response()->success($request->user()->load([
             'village',
-            'membership'
+            'membership.identities'
         ]));
     }
 
@@ -49,7 +49,7 @@ class VillageApiController extends Controller
                 $user = $village->account;
                 return response()->success($user->load([
                     'village',
-                    'membership'
+                    'membership.identities'
                 ]));
             } else {
                 return response()->fail($village, 404);
@@ -73,7 +73,7 @@ class VillageApiController extends Controller
             $user = $village->account;
             return response()->success($user->load([
                 'village',
-                'membership'
+                'membership.identities'
             ]));
         } else {
             return response()->fail($village, 404);
@@ -108,7 +108,7 @@ class VillageApiController extends Controller
             $user = $village->account;
             return response()->success($user->load([
                 'village',
-                'membership'
+                'membership.identities'
             ]));
         } else {
             return response()->fail($village, 404);

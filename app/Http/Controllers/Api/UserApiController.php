@@ -93,7 +93,7 @@ class UserApiController extends Controller
             $user->membership()->create([
                 'uuid' => time()
             ]);
-            return response()->success($user->load('membership'));
+            return response()->success($user->load('membership.identities'));
         } else {
             return response()->fail([
                 'errors' => [
@@ -112,8 +112,8 @@ class UserApiController extends Controller
     public function show(User $user)
     {
         $user = $user->role_id == 2
-            ? $user->load(['village', 'membership'])
-            : $user->load('membership');
+            ? $user->load(['village', 'membership.identities'])
+            : $user->load('membership.identities');
         return response()->success($user);
     }
 
@@ -149,8 +149,8 @@ class UserApiController extends Controller
         }
         if ($user->update($data)) {
             $user = $user->role_id == 2
-                ? $user->load(['village', 'membership'])
-                : $user->load('membership');
+                ? $user->load(['village', 'membership.identities'])
+                : $user->load('membership.identities');
             return response()->success($user);
         } else {
             return response()->fail([

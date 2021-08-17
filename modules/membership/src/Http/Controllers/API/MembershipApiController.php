@@ -70,7 +70,7 @@ class MembershipApiController extends Controller
             return response()->json([
                 'data' => [
                     'token' => $token,
-                    'user' => $user->load('membership')
+                    'user' => $user->load('membership.identities')
                 ]
             ]);
         } else {
