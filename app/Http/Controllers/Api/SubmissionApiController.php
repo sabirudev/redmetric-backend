@@ -111,7 +111,20 @@ class SubmissionApiController extends Controller
                 $indicator->pivot->values()->createMany($values->toArray());
             }
         });
-        return response()->success($submission);
+        $response = $submission->load([
+            'indicators' => function ($query) use ($request) {
+                $query->when($request->code, function ($q) use ($request) {
+                    return $q->where('code', $request->code);
+                });
+            }
+        ]);
+        $page = intval($request->page ?? 1);
+        $response = collect([
+            'next' => $page + 1,
+            'prev' => $page - 1,
+            'current' => $page
+        ])->merge($response);
+        return response()->success($response);
     }
 
     /**

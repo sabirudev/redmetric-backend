@@ -39,7 +39,9 @@ class SubmissionStore extends FormRequest
             'submissions' => 'required|array',
             'submissions.*.indicator_id' => 'required|exists:indicators,id',
             'submissions.*.indicator_input_id' => 'required|exists:indicator_inputs,id',
-            'submissions.*.value' => 'nullable|numeric'
+            'submissions.*.value' => 'nullable|numeric',
+            'code' => 'sometimes|exists:indicators,code',
+            'page' => 'sometimes|exists:indicator_criterias,id'
         ];
     }
 
