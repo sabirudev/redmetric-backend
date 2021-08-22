@@ -43,6 +43,7 @@ class SubmissionApiController extends Controller
                 });
             }
             $idCriteria = $request->page ?? 1;
+            $idCriteria = $idCriteria == 0 ? 1 : $idCriteria;
             $criteria = $criteria->with([
                 'indicators.inputs'
             ]);
@@ -50,12 +51,13 @@ class SubmissionApiController extends Controller
             $questions  = $criteria->indicators->map(function ($indicator) {
                 return $indicator->inputs->load('indicator');
             })->flatten();
-            $questions  = $questions->map(function ($question) use ($pivot) {
+            $questions  = $questions->map(function ($question, $index) use ($pivot) {
                 $input      = $pivot->pluck('values')->flatten()->where('indicator_input_id', $question->id)->first();
                 $question   = collect($question);
                 $loadPivot  = collect($pivot->where('indicator_id', $question->get('indicator_id'))->first());
                 $loadPivot->forget('values');
                 $question   = $question->merge([
+                    'index' => $index,
                     'value' => $input->value ?? null,
                     'pivot' => $loadPivot
                 ]);
