@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\UserSubmisionApiController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\JuryMiddleware;
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,3 +43,5 @@ Route::middleware(['auth:api', JuryMiddleware::class])
         Route::apiResource('todos', 'JuryTodoApiController', ['names' => 'api.jury.todos']);
         Route::get('todos/index/mylist', 'JuryTodoApiController@mylist')->name('api.jury.todos.mylist');
     });
+// public file
+Route::get('preview/{uploaded}', [UserSubmisionApiController::class, 'show'])->name('api.user.preview.uploaded');
