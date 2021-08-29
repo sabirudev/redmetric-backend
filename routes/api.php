@@ -25,6 +25,7 @@ Route::middleware('auth:api')
         Route::apiResource('villages', 'VillageApiController', ['names' => 'api.user.villages']);
         Route::group(['prefix' => 'submissions'], function () {
             Route::get('my/index', 'UserSubmisionApiController@index')->name('api.user.submissions.my.index');
+            Route::get('valid/period', 'PeriodApiController@valid')->name('api.user.submissions.valid.period');
             Route::post('upload/evidence/{submit}', 'SubmissionApiController@evidence', ['names' => 'api.user.submission.upload.evidence']);
         });
     });

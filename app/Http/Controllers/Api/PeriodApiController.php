@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Period;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PeriodApiController extends Controller
@@ -110,5 +111,15 @@ class PeriodApiController extends Controller
             $period->delete();
             return response()->success($period);
         }
+    }
+
+    public function valid(Period $periods)
+    {
+        $periods = $periods->where(function ($query) {
+            $query->whereDate('opened', '<=', Carbon::now()->format('Y-m-d'))
+                ->whereDate('closed', '>=', Carbon::now()->format('Y-m-d'))
+                ->where('is_ended', false);
+        })->first();
+        return response()->success($periods);
     }
 }

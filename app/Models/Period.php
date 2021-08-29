@@ -14,6 +14,7 @@ class Period extends Model
         'closed',
         'is_ended'
     ];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function submissions()
     {
