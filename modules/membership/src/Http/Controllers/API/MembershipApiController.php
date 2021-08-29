@@ -24,7 +24,10 @@ class MembershipApiController extends Controller
     public function index(Request $request)
     {
         return response()->json([
-            'data' => $request->user()->load('membership.identities')
+            'data' => $request->user()->load([
+                'membership.identities',
+                'village'
+            ])
         ]);
     }
 
