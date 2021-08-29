@@ -133,9 +133,18 @@ class SubmissionApiController extends Controller
      * @param  \App\Models\Submission  $submission
      * @return \Illuminate\Http\Response
      */
-    public function show(Submission $submission)
+    public function show(Request $request, Submission $submission)
     {
-        return response()->success($submission);
+        return response()->success($submission->load([
+            'user.village',
+            'period',
+            'indicators' => function ($query) use ($request) {
+                $query->when($request->filled('page'), function ($subQuery) use ($request) {
+                    $subQuery->where('indicator_criteria_id', $request->page);
+                });
+            },
+            'indicators.inputs'
+        ]));
     }
 
     /**

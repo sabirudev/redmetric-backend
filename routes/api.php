@@ -34,6 +34,7 @@ Route::middleware(['auth:api', AdminMiddleware::class])
     ->group(function () {
         Route::apiResource('users', 'UserApiController', ['names' => 'api.admin.users']);
         Route::apiResource('periods', 'PeriodApiController', ['names' => 'api.admin.periods']);
+        Route::get('index/all/submissions', 'UserSubmisionApiController@all', ['names' => 'api.admin.index.submissions']);
     });
 
 Route::middleware(['auth:api', JuryMiddleware::class])

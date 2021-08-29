@@ -6,11 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TodoStore;
 use App\Models\JurySubmission;
 use App\Models\Submission;
+use App\Traits\JuryTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class JuryTodoApiController extends Controller
 {
+    use JuryTrait;
     /**
      * Display a listing of the resource.
      *
@@ -26,16 +31,18 @@ class JuryTodoApiController extends Controller
         $todos = $todos->whereDoesntHave('jurySubmissions', function ($query) use ($request) {
             $query->where('jury_id', $request->user()->jury->id);
         });
-        $todos = $todos->paginate();
+        $todos = $todos->paginate()->setPath('');
         return response()->success($todos);
     }
 
     public function mylist(Request $request)
     {
-        return response()->success($request->user()->jury->submissions->load([
+        $submissions = $request->user()->jury->submissions->load([
             'submission.period',
             'submission.user.village'
-        ]));
+        ]);
+
+        return response()->success($this->paginate($submissions));
     }
 
     /**
@@ -54,7 +61,7 @@ class JuryTodoApiController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TodoStore $request)
+    public function store(TodoStore $request, Submission $submission)
     {
         DB::beginTransaction();
         try {
@@ -75,7 +82,9 @@ class JuryTodoApiController extends Controller
                 );
             });
             DB::commit();
-            return response()->success($request->all());
+            $submission = $submission->where('id', $request->submission_id)->first();
+            $submission = $this->jurySubmission($submission, $request, $request->page ?? 1);
+            return response()->success($submission);
         } catch (\Throwable $th) {
             throw $th;
             DB::rollBack();
@@ -96,21 +105,7 @@ class JuryTodoApiController extends Controller
     public function show(Request $request, Submission $todo)
     {
         $page = $request->page ?? 1;
-        $todos = $todo->load([
-            'user.village',
-            'period',
-            'indicators' => function ($query) use ($page) {
-                $query->where('indicator_criteria_id', $page);
-            }
-        ]);
-        $todos = collect($todos->indicators)->map(function ($indicator) use ($request) {
-            $indicator->pivot->load([
-                'juryValues' => function ($query) use ($request) {
-                    $query->where('jury_id', $request->user()->jury->id);
-                }
-            ]);
-            return $indicator;
-        });
+        $todos = $this->jurySubmission($todo, $request, $page);
         return response()->json($todos);
     }
 
@@ -159,5 +154,17 @@ class JuryTodoApiController extends Controller
     public function destroy(Submission $submission)
     {
         //
+    }
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    public function paginate($items, $perPage = 5, $page = null, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 }
