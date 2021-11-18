@@ -123,7 +123,9 @@ export default function Dashboard(props) {
                                         </span>
                                         <span className="tracking-wide">Unggah Identitas Penduduk (KTP) </span>
                                     </div>
-                                    <Uploader />
+                                    <div className="p-3">
+                                        <Uploader />
+                                    </div>
                                 </div>
                                 <div>
                                     <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8 mb-3">
@@ -139,7 +141,9 @@ export default function Dashboard(props) {
                                         </span>
                                         <span className="tracking-wide">Unggah Surat Tugas Desa</span>
                                     </div>
-                                    <Uploader />
+                                    <div className="p-3">
+                                        <Uploader />
+                                    </div>
                                 </div>
                             </div>
                             {/* End of Experience and education grid */}
