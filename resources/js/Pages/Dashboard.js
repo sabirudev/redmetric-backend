@@ -2,8 +2,10 @@ import React from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
 import Uploader from '@/Components/Uploader';
+import moment from 'moment'
 
 export default function Dashboard(props) {
+    const { membership, village } = props
     return (
         <Authenticated
             auth={props.auth}
@@ -21,21 +23,28 @@ export default function Dashboard(props) {
                                     src="https://lavinephotography.com.au/wp-content/uploads/2017/01/PROFILE-Photography-112.jpg"
                                 />*/}
                             </div>
-                            <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">Jane Doe</h1>
-                            <h3 className="text-gray-600 font-lg text-semibold leading-6">Owner at Her Company Inc.</h3>
-                            <p className="text-sm text-gray-500 hover:text-gray-600 leading-6">Lorem ipsum dolor sit amet
-                                consectetur adipisicing elit.
-                                Reprehenderit, eligendi dolorum sequi illum qui unde aspernatur non deserunt</p>
+                            <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">{membership?.first_name?.toUpperCase() || props.auth.user.name?.toUpperCase() || 'Your Name'}</h1>
+                            <h3 className="text-gray-600 font-lg text-semibold leading-6">{props.auth.user.email || 'Belum ada email'}</h3>
+                            <p className="text-sm text-gray-500 hover:text-gray-600 leading-6">
+                                {membership ? `${membership.address}, Kec. ${membership.subdistrict} Kab/Kota ${membership.city}, ${membership.province}` : ''}
+                            </p>
                             <ul
                                 className="bg-gray-100 text-gray-600 hover:text-gray-700 hover:shadow py-2 px-3 mt-3 divide-y rounded shadow-sm">
                                 <li className="flex items-center py-3">
                                     <span>Status</span>
-                                    <span className="ml-auto"><span
-                                        className="bg-green-500 py-1 px-2 rounded text-white text-sm">Active</span></span>
+                                    <span className="ml-auto">
+                                        {
+                                            props.auth.user.email_verified_at
+                                                ? <span className="bg-green-500 py-1 px-2 rounded text-white text-sm">Verified</span>
+                                                : <span className="bg-red-500 py-1 px-2 rounded text-white text-sm">Unverified</span>
+                                        }
+                                    </span>
                                 </li>
                                 <li className="flex items-center py-3">
                                     <span>Member since</span>
-                                    <span className="ml-auto">Nov 07, 2016</span>
+                                    <span className="ml-auto">
+                                        {props.auth.user.created_at ? moment(props.auth.user.created_at, "YYYY-MM-DD").format("DD MMM Y") : '-'}
+                                    </span>
                                 </li>
                             </ul>
                         </div>
@@ -63,37 +72,35 @@ export default function Dashboard(props) {
                                 <div className="grid md:grid-cols-2 text-sm">
                                     <div className="grid grid-cols-2">
                                         <div className="px-4 py-2 font-semibold">Nama Desa / Kelurahan</div>
-                                        <div className="px-4 py-2">Pandansari</div>
+                                        <div className="px-4 py-2">{village?.name || '-'}</div>
                                     </div>
                                     <div className="grid grid-cols-2">
                                         <div className="px-4 py-2 font-semibold">Tanggal Berdiri</div>
-                                        <div className="px-4 py-2">12/12/1991</div>
+                                        <div className="px-4 py-2">{village?.since ? moment(village.since, "YYYY-MM-DD").format("DD MMM Y") : '-'}</div>
                                     </div>
                                     <div className="grid grid-cols-2">
                                         <div className="px-4 py-2 font-semibold">Kepala Desa / Lurah</div>
-                                        <div className="px-4 py-2">Bpk Fulan</div>
+                                        <div className="px-4 py-2">{village?.head || '-'}</div>
                                     </div>
                                     <div className="grid grid-cols-2">
                                         <div className="px-4 py-2 font-semibold">Alamat</div>
-                                        <div className="px-4 py-2">Jl Pandansari No. 128, Kec. Paguyangan</div>
+                                        <div className="px-4 py-2">{village?.address || '-'}</div>
                                     </div>
                                     <div className="grid grid-cols-2">
                                         <div className="px-4 py-2 font-semibold">Sekretaris Desa / Lurah</div>
-                                        <div className="px-4 py-2">Bu Sekretaris</div>
+                                        <div className="px-4 py-2">{village?.secretary || '-'}</div>
                                     </div>
                                     <div className="grid grid-cols-2">
                                         <div className="px-4 py-2 font-semibold">Provinsi</div>
-                                        <div className="px-4 py-2">Jawa Tengah</div>
+                                        <div className="px-4 py-2">{village?.province || '-'}</div>
                                     </div>
                                     <div className="grid grid-cols-2">
                                         <div className="px-4 py-2 font-semibold">Luas Wilayah Desa</div>
-                                        <div className="px-4 py-2">
-                                            2000 M2
-                                        </div>
+                                        <div className="px-4 py-2">{village?.area || ''}</div>
                                     </div>
                                     <div className="grid grid-cols-2">
                                         <div className="px-4 py-2 font-semibold">Alamat Website Official Desa</div>
-                                        <div className="px-4 py-2"><a className="text-blue-800" href="#">https://desa-satu.com</a></div>
+                                        <div className="px-4 py-2"><a className="text-blue-800" href="#" target="_blank" rel="noopener noreferrer">{village?.website || '-'}</a></div>
                                     </div>
                                 </div>
                             </div>
