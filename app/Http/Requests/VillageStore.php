@@ -28,7 +28,9 @@ class VillageStore extends FormRequest
             'head' => 'required|string',
             'address' => 'required|string',
             'website' => 'string',
-            'province' => 'required|string'
+            'province' => 'required|string',
+            'amount_productive_age' => 'required|numeric',
+            'area' => 'required|numeric',
         ];
     }
 

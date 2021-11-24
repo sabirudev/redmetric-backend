@@ -2,29 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VillageStore;
+use App\Http\Requests\VillageUpdate;
 use App\Models\Village;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
-class VillageController extends Controller
+class ProfileController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function form(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $user = collect($request->user()->load(['membership', 'village']));
+        return Inertia::render('ProfileForm', [
+            'membership' => $user->get('membership'),
+            'village' => $user->get('village')
+        ]);
     }
 
     /**
@@ -33,15 +26,15 @@ class VillageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Village $village)
+    public function store(VillageStore $request, Village $village)
     {
         $data = $request->all();
         $data['user_id'] = $request->user()->id;
+        $data['since'] = Carbon::parse($request->get('since'))->format('Y-m-d');
         $village = $village->create($data);
         if ($village) {
             if ($village->account()->count()) {
-                $user = $village->account;
-                return response()->route('dashboard')->with([
+                return redirect()->route('dashboard')->with([
                     'success' => 'Success! Your village is stored'
                 ]);
             } else {
@@ -57,37 +50,20 @@ class VillageController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Village  $village
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Village $village)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Village  $village
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Village $village)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Village  $village
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Village $village)
+    public function update(VillageUpdate $request, Village $village)
     {
-        //
+        $data = $request->all();
+        $data['since'] = Carbon::parse($request->get('since'))->format('Y-m-d');
+        $village->update($data);
+        return redirect()->route('dashboard')->with([
+            'success' => 'Success! Your village is stored'
+        ]);
     }
 
     /**

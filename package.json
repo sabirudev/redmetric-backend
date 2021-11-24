@@ -28,6 +28,7 @@
         "tailwindcss": "^2.1.2"
     },
     "dependencies": {
-        "moment": "^2.29.1"
+        "moment": "^2.29.1",
+        "react-datepicker": "^4.3.0"
     }
 }

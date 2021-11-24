@@ -28,7 +28,9 @@ class VillageUpdate extends FormRequest
             'head' => 'sometimes|required|string',
             'address' => 'sometimes|required|string',
             'website' => 'string',
-            'province' => 'sometimes|required|string'
+            'province' => 'sometimes|required|string',
+            'amount_productive_age' => 'required|numeric',
+            'area' => 'required|numeric',
         ];
     }
 }
