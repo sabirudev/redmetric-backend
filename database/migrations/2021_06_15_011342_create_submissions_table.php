@@ -19,7 +19,7 @@ class CreateSubmissionsTable extends Migration
             $table->unsignedInteger('period_id');
             $table->decimal('total_values', 8, 2)->default(0);
             $table->decimal('total_points', 8, 2)->default(0);
-            $table->integer('rangking')->nullable()->comment('Hasil Peringkat Desa');
+            $table->integer('ranking')->nullable()->comment('Hasil Peringkat Desa');
             $table->boolean('publish')->default(false);
             $table->timestamps();
         });

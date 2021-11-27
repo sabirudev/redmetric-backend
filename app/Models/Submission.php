@@ -17,6 +17,8 @@ class Submission extends Model
         'publish'
     ];
 
+    protected $appends = ['status'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -37,5 +39,13 @@ class Submission extends Model
     public function jurySubmissions()
     {
         return $this->hasMany(JurySubmission::class, 'submission_id', 'id');
+    }
+
+    public function getStatusAttribute()
+    {
+        return [
+            'color' => $this->publish ? 'green' : 'yellow',
+            'text' => $this->publish ? 'SUBMITTED' : 'DRAFT'
+        ];
     }
 }

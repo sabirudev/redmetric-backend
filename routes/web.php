@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubmissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     Route::get('/profile', [ProfileController::class, 'form'])->name('dashboard.profile.form');
     Route::post('/profile', [ProfileController::class, 'store'])->name('dashboard.profile.store');
     Route::put('/profile/{village}', [ProfileController::class, 'update'])->name('dashboard.profile.update');
+    Route::get('/submission/{period}/form/', [SubmissionController::class, 'form'])->name('dashboard.user.submission.form');
+    Route::post('/submission/{period}/form/', [SubmissionController::class, 'store'])->name('dashboard.user.submission.store');
 });
 
 require __DIR__ . '/auth.php';

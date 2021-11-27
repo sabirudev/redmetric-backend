@@ -3,11 +3,12 @@ import Authenticated from '@/Layouts/Authenticated';
 import { Head, Link } from '@inertiajs/inertia-react';
 import Uploader from '@/Components/Uploader';
 import moment from 'moment'
-import Button from '@/Components/Button';
 import UserCard from '@/Components/UserCard';
+import { Center, Grid, GridItem } from '@chakra-ui/layout';
+import { Button } from '@chakra-ui/button';
 
 export default function Dashboard(props) {
-    const { membership, village } = props
+    const { membership, village } = props;
     return (
         <Authenticated
             auth={props.auth}
@@ -71,19 +72,17 @@ export default function Dashboard(props) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-3 gap-4">
-                                <div></div>
-                                <div className="col-span-2">
+
+                            <Grid templateColumns="repeat(5, 1fr)" gap={4}>
+                                <GridItem colSpan={2} h="10" >
+                                    <Button colorScheme="blue">Download Surat Tugas</Button>
+                                </GridItem>
+                                <GridItem colStart={4} colEnd={6} h="10" >
                                     <Link href={route('dashboard.profile.form')}>
-                                        <Button>
-                                            Edit Data Desa / Kelurahan
-                                        </Button>
+                                        <Button>Edit Data</Button>
                                     </Link>
-                                </div>
-                            </div>
-                            <button className="block w-full text-blue-800 text-sm font-semibold rounded-lg hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-blue-100 hover:shadow-xs p-3 my-4">
-                                Download Surat Tugas
-                            </button>
+                                </GridItem>
+                            </Grid>
                         </div>
                         {/* End of about section */}
 

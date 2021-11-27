@@ -10,7 +10,7 @@ use App\Models\Indicator;
 class IndicatorCriteria extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['number', 'name'];
+    protected $fillable = ['name'];
 
     public function indicators()
     {

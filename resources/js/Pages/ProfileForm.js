@@ -11,7 +11,7 @@ import UserCard from '@/Components/UserCard';
 import ReactDatePicker from 'react-datepicker';
 
 export default function ProfileForm(props) {
-    const { membership, village } = props
+    const { membership, village } = props;
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: village?.name || '',
         since: village?.since ? new Date(village.since) : null,

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Submission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Mockery\Matcher\Subset;
 
 class DashboardController extends Controller
 {
@@ -16,8 +19,11 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function submission()
+    public function submission(Request $request, Submission $submissions)
     {
-        return Inertia::render('Submission');
+        $submissions = $submissions::where('user_id', $request->user()->id)
+            ->with('period')
+            ->get();
+        return Inertia::render('Submission', ['submissions' => $submissions]);
     }
 }
