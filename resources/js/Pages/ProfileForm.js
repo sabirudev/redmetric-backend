@@ -224,7 +224,7 @@ export default function ProfileForm(props) {
                                         <span className="tracking-wide">Unggah Identitas Penduduk (KTP) </span>
                                     </div>
                                     <div className="p-3">
-                                        <Uploader />
+                                        <Uploader url={route('dashboard.profile.upload', membership)} />
                                     </div>
                                 </div>
                                 <div>
@@ -242,7 +242,7 @@ export default function ProfileForm(props) {
                                         <span className="tracking-wide">Unggah Surat Tugas Desa</span>
                                     </div>
                                     <div className="p-3">
-                                        <Uploader />
+                                        <Uploader url={route('dashboard.profile.upload', membership)} type="assigment" />
                                     </div>
                                 </div>
                             </div>

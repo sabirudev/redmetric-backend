@@ -45,22 +45,22 @@ export default function Submission(props) {
                                 {submissions?.map((s, index) => (
                                     <Tr key={index}>
                                         <Td isNumeric>{index + 1}</Td>
-                                        <Td>{moment(s.created_at, "YYYY-MM-DD HH:mm:ss").format("DD-MMM-YYYY HH:mm:ss")}</Td>
+                                        <Td>{s.submissions ? moment(s.submissions?.created_at, "YYYY-MM-DD HH:mm:ss").format("DD-MMM-YYYY HH:mm:ss") : '-'}</Td>
                                         <Td>
 
-                                            {moment(s?.period?.opened, "YYYY-MM-DD").format("DD-MMM-YYYY")}
+                                            {moment(s.opened, "YYYY-MM-DD").format("DD-MMM-YYYY")}
                                             &nbsp;&rarr;&nbsp;
-                                            {moment(s?.period?.closed, "YYYY-MM-DD").format("DD-MMM-YYYY")}
+                                            {moment(s.closed, "YYYY-MM-DD").format("DD-MMM-YYYY")}
 
                                         </Td>
-                                        <Td isNumeric>{s.ranking}</Td>
+                                        <Td isNumeric>{s.submissions ? s.submissions?.ranking : '-'}</Td>
                                         <Td>
-                                            <Badge variant="subtle" colorScheme={s?.status?.color}>
-                                                {s?.status?.text}
+                                            <Badge variant="subtle" colorScheme={s?.submissions ? s?.submissions.status?.color : 'gray'}>
+                                                {s.submissions ? s.submissions?.status?.text : 'not submitted yet'}
                                             </Badge>
                                         </Td>
                                         <Td>
-                                            <Link href={route('dashboard.user.submission.form', s.period.id)}>
+                                            <Link href={route('dashboard.user.submission.form', s.id)}>
                                                 <Button rightIcon={<ArrowForwardIcon />} size="sm" colorScheme="teal" variant="outline">
                                                     View
                                                 </Button>

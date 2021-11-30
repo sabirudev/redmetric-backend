@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UploadIdentity;
 use App\Http\Requests\VillageStore;
 use App\Http\Requests\VillageUpdate;
 use App\Models\Village;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Membership\Member;
 
 class ProfileController extends Controller
 {
@@ -75,5 +77,17 @@ class ProfileController extends Controller
     public function destroy(Village $village)
     {
         //
+    }
+
+    public function upload(UploadIdentity $request, Member $membership)
+    {
+        try {
+            $data = $request->except('document');
+            $data['document'] = $request->document->store('identities');
+            $membership->identities()->create($data);
+            return redirect()->route('dashboard')->with(['success' => 'Success!']);
+        } catch (\Throwable $th) {
+            return redirect()->route('dashboard')->with(['error' => 'Error!']);
+        }
     }
 }

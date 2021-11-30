@@ -32,6 +32,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified']], fu
     Route::get('/profile', [ProfileController::class, 'form'])->name('dashboard.profile.form');
     Route::post('/profile', [ProfileController::class, 'store'])->name('dashboard.profile.store');
     Route::put('/profile/{village}', [ProfileController::class, 'update'])->name('dashboard.profile.update');
+    Route::post('/profile/{membership}/upload', [ProfileController::class, 'upload'])->name('dashboard.profile.upload');
     Route::get('/submission/{period}/form/', [SubmissionController::class, 'form'])->name('dashboard.user.submission.form');
     Route::post('/submission/{period}/form/', [SubmissionController::class, 'store'])->name('dashboard.user.submission.store');
 });

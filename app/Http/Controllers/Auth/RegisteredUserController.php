@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
@@ -45,6 +46,13 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        // create membership
+        if ($user) {
+            $user->membership()->create([
+                'uuid' => Str::uuid()
+            ]);
+        }
 
         event(new Registered($user));
 

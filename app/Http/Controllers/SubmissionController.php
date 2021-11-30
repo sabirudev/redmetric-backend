@@ -34,13 +34,9 @@ class SubmissionController extends Controller
             })->flatten();
             $items = $items->map(function ($item, $index) use ($pivot) {
                 $input      = $pivot->pluck('values')->flatten()->where('indicator_input_id', $item->id)->first();
-                $question   = collect($item);
-                $loadPivot  = collect($pivot->where('indicator_id', $question->get('indicator_id'))->first());
-                $loadPivot->forget('values');
-                $question   = $question->merge([
+                $question   = collect($item)->merge([
                     'index' => $index,
-                    'value' => $input->value ?? null,
-                    'pivot' => $loadPivot
+                    'value' => $input->value ?? ''
                 ]);
                 return $question;
             });
@@ -61,8 +57,37 @@ class SubmissionController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Period $period)
     {
-        # code...
+        $submission = Submission::firstOrCreate([
+            'user_id' => $request->user()->id,
+            'period_id' => $period->id
+        ]);
+        
+        $inputs = collect($request->all())->map(function($items){
+            $data = collect($items)->map(function($item){
+                $item = collect($item)
+                ->only(['value', 'indicator_id'])
+                ->merge(['indicator_input_id' => $item['id']]);
+                return $item;
+            });
+            return $data;
+        })->flatten(1);
+        $indicators = $inputs->groupBy('indicator_id');
+        $submission->indicators()->syncWithoutDetaching($indicators->keys()->toArray());
+        $submission->indicators->each(function ($indicator) use ($indicators) {
+            $values = $indicators->get($indicator->id);
+            if ($values) {
+                $values = $values->map(function ($value) {
+                    return collect($value)->except('indicator_id')->toArray();
+                });
+
+                if ($indicator->pivot->values()->count() > 0) {
+                    $indicator->pivot->values()->whereIn('indicator_input_id', $values->pluck('indicator_input_id')->toArray())->delete();
+                }
+                $indicator->pivot->values()->createMany($values->toArray());
+            }
+        });
+        return redirect()->route('dashboard.submission');
     }
 }

@@ -9,6 +9,8 @@ import { Button } from '@chakra-ui/button';
 
 export default function Dashboard(props) {
     const { membership, village } = props;
+    const identityCard = membership?.identities?.find((i) => i.type === 'idcard')
+    const identityAssignment = membership?.identities?.find((i) => i.type === 'assigment')
     return (
         <Authenticated
             auth={props.auth}
@@ -104,7 +106,9 @@ export default function Dashboard(props) {
                                         <span className="tracking-wide">Identitas Penduduk (KTP) </span>
                                     </div>
                                     <div className="p-3">
-                                        <Uploader />
+                                        <Center>
+                                            {identityCard ? identityCard?.document : <i>Not Uploaded yet</i>}
+                                        </Center>
                                     </div>
                                 </div>
                                 <div>
@@ -122,7 +126,9 @@ export default function Dashboard(props) {
                                         <span className="tracking-wide">Surat Tugas Desa</span>
                                     </div>
                                     <div className="p-3">
-                                        <Uploader />
+                                        <Center>
+                                            {identityAssignment ? identityAssignment?.document : <i>Not Uploaded yet</i>}
+                                        </Center>
                                     </div>
                                 </div>
                             </div>
